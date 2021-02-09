@@ -51,3 +51,7 @@ FROM docker.bin.sbb.ch/cloud/plattform-nginx:1.14.0-01
 RUN sed -i "s/}/application\/wasm wasm;\n}/g" /etc/nginx/mime.types
 COPY cvat-ui/react_nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=cvat-ui /tmp/cvat-ui/dist /usr/share/nginx/html/
+
+# OpenShift: Fix permissions on nginx directories (see https://developers.redhat.com/blog/2020/10/26/adapting-docker-and-kubernetes-containers-to-run-on-red-hat-openshift-container-platform/)
+RUN chgrp -R 0 /etc/nginx && chmod -R g=u /etc/nginx
+RUN chgrp -R 0 /var/cache/nginx && chmod -R g=u /var/cache/nginx
