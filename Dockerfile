@@ -143,11 +143,14 @@ COPY --chown=${USER} cvat/ ${HOME}/cvat
 COPY --chown=${USER} utils/ ${HOME}/utils
 COPY --chown=${USER} tests/ ${HOME}/tests
 
+RUN mkdir /var/run/supervisor
+RUN chown -R ${USER}:${USER} /var/run/supervisor
+
 # RUN all commands below as 'django' user
 USER ${USER}
 WORKDIR ${HOME}
 
-RUN mkdir data share media keys logs /tmp/supervisord /var/run/supervisor
+RUN mkdir data share media keys logs /tmp/supervisord
 RUN python3 manage.py collectstatic
 
 EXPOSE 8080
